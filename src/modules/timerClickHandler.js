@@ -1,14 +1,10 @@
 
 
 const timerClickHandler = (state, callSetState) => {
+    // console.log('[timerClickHandler] start')
 
     const newPomodoroData = state.pomodoroData;
     newPomodoroData.timerActive = !newPomodoroData.timerActive;
-    if (newPomodoroData.timerActive) {
-        callSetState({
-            actMode: 'stopped'
-        });
-    }
     callSetState({
         pomodoroData: newPomodoroData
     });
