@@ -1,0 +1,17 @@
+.circle-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    /* width: 20px;
+    height: 20px; */
+    /* background-color: red; */
+    /* margin: 10px; */
+    border-radius: 50%;
+    border: 1px solid;
+    overflow: hidden;
+}
+
+.circle-indicator__status {
+    width: 100%;
+    /* background-color: black; */
+}
