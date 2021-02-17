@@ -3,7 +3,7 @@ import './PomodoroTimer.css';
 import pomodoroContext from '../../context/pomodoroContext';
 import CircleIndicator from '../CircleIndicator/CircleIndicator';
 
-export default function PomodoroTimer() {
+export default function PomodoroTimer(props) {
 
     const { pomodoroData, timerClickHandler } = useContext(pomodoroContext);
 
@@ -11,10 +11,10 @@ export default function PomodoroTimer() {
     const seconds = Math.floor(pomodoroData.timer % 60);
     let percent = 0;
     if (pomodoroData.nextPomodoroMode === 'shortBreak') {
-        percent = 100 - (((minutes*60+seconds)/(25*60))*100)
+        percent = 100 - (((minutes*60+seconds)/(pomodoroData.sessionLength*60))*100)
     }
     else if (pomodoroData.nextPomodoroMode === 'work') {
-        percent = (((minutes*60+seconds)/(5*60))*100)
+        percent = (((minutes*60+seconds)/(pomodoroData.breakLength*60))*100)
     }
 
     const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
@@ -37,9 +37,12 @@ export default function PomodoroTimer() {
 
     return (
 
-        <div className="pomodoro-timer" style={{ height: sizeOfCircle, width: sizeOfCircle, fontSize: sizeOfFont, boxShadow: shadowOfBox }} onClick={timerClickHandler}>
+        <div id="start_stop" className="pomodoro-timer" style={{ height: sizeOfCircle, width: sizeOfCircle, fontSize: sizeOfFont, boxShadow: shadowOfBox }} onClick={timerClickHandler}>
             <CircleIndicator percent={percent} size={sizeOfCircle} color="#8098b1" />
-            <div className="pomodoro-timer__text">
+            <div className="pomodoro-timer__label" id="timer-label">
+                {props.label}
+            </div>
+            <div className="pomodoro-timer__text" id="time-left">
                 {minutes < 10 ? `0${minutes}`: minutes}:{seconds < 10 ? `0${seconds}`: seconds}
             </div>
         </div>

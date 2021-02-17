@@ -24,4 +24,11 @@
     -khtml-user-select: none;
     -webkit-user-select: none;
     -o-user-select: none;
+    /* background-color: red; */
+}
+
+.pomodoro-timer__label {
+    position: absolute;
+    top: 20%;
+    font-size: 40px;
 }

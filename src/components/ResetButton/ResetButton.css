@@ -1,0 +1,20 @@
+.reset-button{
+    display: flex;
+    flex-direction: column;
+    width: 80px;
+    height: 80px;
+    border-radius: 100px;
+    justify-content: center;
+    align-items: center;
+    color: #8098b1ba;
+    border: 1px solid #8098b1ba;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+
+
+
+

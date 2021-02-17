@@ -1,0 +1,50 @@
+.length-input {
+    display: flex;
+    flex-direction: column;
+    background-color: #8098b1ba;
+    width: 100px;
+    height: 100px;
+    border-radius: 100px;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+}
+
+
+.length-input__label {
+    font-size: 18px;
+}
+
+.length-input__length {
+    font-size: 20px;
+}
+
+.length-input__increment,
+.length-input__decrement {
+    position: absolute;
+}
+
+.length-input__increment {
+    top: 0;
+    font-size: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.length-input__decrement {
+    bottom: 0;
+    font-size: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.length-input__increment:hover,
+.length-input__decrement:hover {
+    background-color: #8098b1;
+    cursor: pointer;
+}
