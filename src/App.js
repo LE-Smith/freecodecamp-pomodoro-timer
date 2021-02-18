@@ -67,13 +67,54 @@ function App() {
   };
 
   const onResetClickedHandler = () => {
-    console.log('reset clicked');
     const newPomodoroData = { ...stateRef.current.pomodoroData };
     newPomodoroData.sessionLength = 25;
     newPomodoroData.breakLength = 5;
-    newPomodoroData.timer = 25*60;
-    newPomodoroData.nextPomodoroMode = "shortBreak";
+    newPomodoroData.timer = 25 * 60;
+    newPomodoroData.nextPomodoroMode = 'shortBreak';
     newPomodoroData.timerActive = false;
+    setState({
+      pomodoroData: newPomodoroData,
+    });
+  };
+
+  const onIncrementClickedHandler = length => {
+    const newPomodoroData = { ...stateRef.current.pomodoroData };
+    if (length === 'session') {
+      if (newPomodoroData.sessionLength >= 60) return;
+      newPomodoroData.sessionLength++;
+    } else if (length === 'break') {
+      if (newPomodoroData.breakLength >= 60) return;
+      newPomodoroData.breakLength++;
+    }
+    if (!newPomodoroData.timerActive) {
+      if (newPomodoroData.nextPomodoroMode === 'shortBreak') {
+        newPomodoroData.timer = newPomodoroData.sessionLength * 60;
+      } else {
+        newPomodoroData.timer = newPomodoroData.breakLength * 60;
+      }
+    }
+    setState({
+      pomodoroData: newPomodoroData,
+    });
+  }
+
+  const onDecrementClickedHandler = length => {
+    const newPomodoroData = { ...stateRef.current.pomodoroData };
+    if (length === 'session') {
+      if (newPomodoroData.sessionLength <= 0) return;
+      newPomodoroData.sessionLength--;
+    } else if (length === 'break') {
+      if (newPomodoroData.breakLength <= 0) return;
+      newPomodoroData.breakLength--;
+    }
+    if (!newPomodoroData.timerActive) {
+      if (newPomodoroData.nextPomodoroMode === 'shortBreak') {
+        newPomodoroData.timer = newPomodoroData.sessionLength * 60;
+      } else {
+        newPomodoroData.timer = newPomodoroData.breakLength * 60;
+      }
+    }
     setState({
       pomodoroData: newPomodoroData,
     });
@@ -89,9 +130,21 @@ function App() {
       >
         <PomodoroTimer label="Session" />
         <div className="button-container">
-        <LengthInput ids={sessionIds} label="Session" length={25} />
-        <ResetButton onClick={onResetClickedHandler}/>
-        <LengthInput ids={breakIds} label="Break" length={5} />
+          <LengthInput
+            ids={sessionIds}
+            label="Session"
+            length={state.pomodoroData.sessionLength}
+            incrementClicked={onIncrementClickedHandler.bind(this, 'session')}
+            decrementClicked={onDecrementClickedHandler.bind(this, 'session')}
+          />
+          <ResetButton onClick={onResetClickedHandler} />
+          <LengthInput
+            ids={breakIds}
+            label="Break"
+            length={state.pomodoroData.breakLength}
+            incrementClicked={onIncrementClickedHandler.bind(this, 'break')}
+            decrementClicked={onDecrementClickedHandler.bind(this, 'break')}
+          />
         </div>
       </pomodoroContext.Provider>
     </div>
