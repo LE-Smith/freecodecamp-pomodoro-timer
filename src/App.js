@@ -22,18 +22,22 @@ function App() {
   const stateRef = useRef(state);
   stateRef.current = state;
 
+  
+  
   useEffect(() => {
     setInterval(() => {
       const newPomodoroData = { ...stateRef.current.pomodoroData };
       const actTimeStamp = moment().valueOf();
       const storedTimeStamp = newPomodoroData.timeStamp;
-
+      
       if (newPomodoroData.timerActive) {
         newPomodoroData.timer =
-          newPomodoroData.timer -
-          Math.round((actTimeStamp - storedTimeStamp) / 1000);
-        if (newPomodoroData.timer <= 0) {
-          newPomodoroData.timerActive = false;
+        newPomodoroData.timer -
+        Math.round((actTimeStamp - storedTimeStamp) / 1000);
+        if (newPomodoroData.timer < 0) {
+          const timerSound = document.getElementById('beep');
+          timerSound.play();
+          // newPomodoroData.timerActive = false;
           if (newPomodoroData.nextPomodoroMode === 'shortBreak') {
             newPomodoroData.timer = newPomodoroData.breakLength * 60;
             newPomodoroData.nextPomodoroMode = 'work';
@@ -76,6 +80,10 @@ function App() {
     setState({
       pomodoroData: newPomodoroData,
     });
+    const timerSound = document.getElementById('beep');
+    timerSound.pause();
+    timerSound.currentTime = 0;
+
   };
 
   const onIncrementClickedHandler = length => {
@@ -83,7 +91,7 @@ function App() {
     if (newPomodoroData.timerActive) return;
     if (length === 'session') {
       if (newPomodoroData.sessionLength >= 60) return;
-      newPomodoroData.sessionLength++; 
+      newPomodoroData.sessionLength++;
       if (newPomodoroData.nextPomodoroMode !== 'work') {
         newPomodoroData.timer = newPomodoroData.sessionLength * 60;
       }
@@ -104,13 +112,13 @@ function App() {
     const newPomodoroData = { ...stateRef.current.pomodoroData };
     if (newPomodoroData.timerActive) return;
     if (length === 'session') {
-      if (newPomodoroData.sessionLength <= 0) return;
+      if (newPomodoroData.sessionLength <= 1) return;
       newPomodoroData.sessionLength--;
       if (newPomodoroData.nextPomodoroMode !== 'work') {
         newPomodoroData.timer = newPomodoroData.sessionLength * 60;
       }
     } else if (length === 'break') {
-      if (newPomodoroData.breakLength <= 0) return;
+      if (newPomodoroData.breakLength <= 1) return;
       newPomodoroData.breakLength--;
       if (newPomodoroData.nextPomodoroMode !== 'shortBreak') {
         newPomodoroData.timer = newPomodoroData.breakLength * 60;
@@ -133,6 +141,13 @@ function App() {
           timerClickHandler: () => timerClickHandler(state, setState),
         }}
       >
+        {' '}
+        <div>
+          <audio
+            id="beep"
+            src="./sounds/a_tone_bell.mp3"
+          />
+        </div>
         <PomodoroTimer label={timerLabel} />
         <div className="button-container">
           <LengthInput
