@@ -22,6 +22,14 @@ function App() {
   const stateRef = useRef(state);
   stateRef.current = state;
 
+  useEffect(() => {
+    const timerText = document.getElementById('time-left')
+    const timeLeft = timerText.innerText;
+    const timerSound = document.getElementById('beep');
+    if (timeLeft === '00:00') {
+      timerSound.play();
+    }
+  }, [state]);
   
   
   useEffect(() => {
@@ -34,9 +42,10 @@ function App() {
         newPomodoroData.timer =
         newPomodoroData.timer -
         Math.round((actTimeStamp - storedTimeStamp) / 1000);
+
         if (newPomodoroData.timer < 0) {
-          const timerSound = document.getElementById('beep');
-          timerSound.play();
+          // const timerSound = document.getElementById('beep');
+          // timerSound.play();
           // newPomodoroData.timerActive = false;
           if (newPomodoroData.nextPomodoroMode === 'shortBreak') {
             newPomodoroData.timer = newPomodoroData.breakLength * 60;
@@ -141,7 +150,6 @@ function App() {
           timerClickHandler: () => timerClickHandler(state, setState),
         }}
       >
-        {' '}
         <div>
           <audio
             id="beep"
