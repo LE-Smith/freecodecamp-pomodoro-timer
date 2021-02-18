@@ -66,6 +66,19 @@ function App() {
     length: 'session-length',
   };
 
+  const onResetClickedHandler = () => {
+    console.log('reset clicked');
+    const newPomodoroData = { ...stateRef.current.pomodoroData };
+    newPomodoroData.sessionLength = 25;
+    newPomodoroData.breakLength = 5;
+    newPomodoroData.timer = 25*60;
+    newPomodoroData.nextPomodoroMode = "shortBreak";
+    newPomodoroData.timerActive = false;
+    setState({
+      pomodoroData: newPomodoroData,
+    });
+  }
+
   return (
     <div className="App">
       <pomodoroContext.Provider
@@ -77,7 +90,7 @@ function App() {
         <PomodoroTimer label="Session" />
         <div className="button-container">
         <LengthInput ids={sessionIds} label="Session" length={25} />
-        <ResetButton />
+        <ResetButton onClick={onResetClickedHandler}/>
         <LengthInput ids={breakIds} label="Break" length={5} />
         </div>
       </pomodoroContext.Provider>
