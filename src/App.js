@@ -35,10 +35,10 @@ function App() {
         if (newPomodoroData.timer <= 0) {
           newPomodoroData.timerActive = false;
           if (newPomodoroData.nextPomodoroMode === 'shortBreak') {
-            newPomodoroData.timer = state.pomodoroData.breakLength * 60;
+            newPomodoroData.timer = newPomodoroData.breakLength * 60;
             newPomodoroData.nextPomodoroMode = 'work';
           } else if (newPomodoroData.nextPomodoroMode === 'work') {
-            newPomodoroData.timer = state.pomodoroData.sessionLength * 60;
+            newPomodoroData.timer = newPomodoroData.sessionLength * 60;
             newPomodoroData.nextPomodoroMode = 'shortBreak';
           }
         }
@@ -80,45 +80,50 @@ function App() {
 
   const onIncrementClickedHandler = length => {
     const newPomodoroData = { ...stateRef.current.pomodoroData };
+    if (newPomodoroData.timerActive) return;
     if (length === 'session') {
       if (newPomodoroData.sessionLength >= 60) return;
-      newPomodoroData.sessionLength++;
+      newPomodoroData.sessionLength++; 
+      if (newPomodoroData.nextPomodoroMode !== 'work') {
+        newPomodoroData.timer = newPomodoroData.sessionLength * 60;
+      }
     } else if (length === 'break') {
       if (newPomodoroData.breakLength >= 60) return;
       newPomodoroData.breakLength++;
-    }
-    if (!newPomodoroData.timerActive) {
-      if (newPomodoroData.nextPomodoroMode === 'shortBreak') {
-        newPomodoroData.timer = newPomodoroData.sessionLength * 60;
-      } else {
+      if (newPomodoroData.nextPomodoroMode !== 'shortBreak') {
         newPomodoroData.timer = newPomodoroData.breakLength * 60;
       }
     }
+
     setState({
       pomodoroData: newPomodoroData,
     });
-  }
+  };
 
   const onDecrementClickedHandler = length => {
     const newPomodoroData = { ...stateRef.current.pomodoroData };
+    if (newPomodoroData.timerActive) return;
     if (length === 'session') {
       if (newPomodoroData.sessionLength <= 0) return;
       newPomodoroData.sessionLength--;
+      if (newPomodoroData.nextPomodoroMode !== 'work') {
+        newPomodoroData.timer = newPomodoroData.sessionLength * 60;
+      }
     } else if (length === 'break') {
       if (newPomodoroData.breakLength <= 0) return;
       newPomodoroData.breakLength--;
-    }
-    if (!newPomodoroData.timerActive) {
-      if (newPomodoroData.nextPomodoroMode === 'shortBreak') {
-        newPomodoroData.timer = newPomodoroData.sessionLength * 60;
-      } else {
+      if (newPomodoroData.nextPomodoroMode !== 'shortBreak') {
         newPomodoroData.timer = newPomodoroData.breakLength * 60;
       }
     }
+
     setState({
       pomodoroData: newPomodoroData,
     });
-  }
+  };
+
+  const timerLabel =
+    state.pomodoroData.nextPomodoroMode === 'shortBreak' ? 'Session' : 'Break';
 
   return (
     <div className="App">
@@ -128,7 +133,7 @@ function App() {
           timerClickHandler: () => timerClickHandler(state, setState),
         }}
       >
-        <PomodoroTimer label="Session" />
+        <PomodoroTimer label={timerLabel} />
         <div className="button-container">
           <LengthInput
             ids={sessionIds}
